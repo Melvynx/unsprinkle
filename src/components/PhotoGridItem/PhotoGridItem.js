@@ -1,11 +1,48 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 
+function getSource(src) {
+  const avifSource = src.replace('.jpg', '.avif');
+
+  return {
+    avif: {
+      base: avifSource,
+      x2: avifSource.replace('.', '@2x.'),
+      x3: avifSource.replace('.', '@3x.'),
+    },
+    jpg: {
+      base: src,
+      x2: src.replace('.', '@2x.'),
+      x3: src.replace('.', '@3x.'),
+    },
+  };
+}
+
 const PhotoGridItem = ({ id, src, alt, tags }) => {
+  const generatedSource = getSource(src);
+
   return (
     <article>
       <Anchor href={`/photos/${id}`}>
-        <Image src={src} />
+        <picture>
+          <source
+            type="image/avif"
+            srcset={`
+      ${generatedSource.avif.base} 1x,
+      ${generatedSource.avif.x2} 2x,
+      ${generatedSource.avif.x3} 3x
+    `}
+          />
+          <source
+            type="image/jpg"
+            srcset={`
+      ${generatedSource.jpg.base} 1x,
+      ${generatedSource.jpg.x2} 2x,
+      ${generatedSource.jpg.x3} 3x
+    `}
+          />
+          <Image alt="" src={src} />
+        </picture>
       </Anchor>
       <Tags>
         {tags.map((tag) => (
@@ -28,6 +65,7 @@ const Image = styled.img`
   height: 300px;
   border-radius: 2px;
   margin-bottom: 8px;
+  object-fit: cover;
 `;
 
 const Tags = styled.ul`
