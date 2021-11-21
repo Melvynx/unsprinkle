@@ -41,7 +41,7 @@ const PhotoGridItem = ({ id, src, alt, tags }) => {
       ${generatedSource.jpg.x3} 3x
     `}
           />
-          <Image alt="" src={src} />
+          <Image alt={tags.join(', ')} src={src} />
         </picture>
       </Anchor>
       <Tags>
